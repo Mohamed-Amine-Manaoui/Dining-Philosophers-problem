@@ -6,7 +6,7 @@
 #include <unistd.h>
 
 #define NBR_PHILO 5
-#define TIME_TO_DIE 400
+#define TIME_TO_DIE 800
 #define TIME_TO_EAT 200
 #define TIME_TO_SLEEP 200
 #define NBR_OF_x7al_khasso_yakl 10
@@ -61,11 +61,33 @@ int	ft_usleep(size_t milliseconds)
 
 void	take_a_fork(t_philo *philo, size_t current_t)
 {
+	pthread_mutex_lock(&philo->help->mutex_monitor);
+	if (philo->help->deads)
+	{
+		pthread_mutex_unlock(&philo->help->mutex_monitor);
+		return ;
+	}
+	pthread_mutex_unlock(&philo->help->mutex_monitor);
 	pthread_mutex_lock(&philo->help->mutex_data);
 	printf(COLOR_YELLOW "%zu %d take a fork !!\n" COLOR_RESET, current_t
 		- philo->help->start, philo->id);
 	pthread_mutex_unlock(&philo->help->mutex_data);
 }
+
+// int message(t_philo *philo, char *str)
+// {
+// 	pthread_mutex_lock();
+// 	if (check_death())
+// 	{
+// 		pthread_mutex_unlock();
+// 		return 1;
+// 	}
+// 	pthread_mutex_unlock();
+// 	pthread_mutex_lock();
+// 	printf("%zu %d %s", calculate_time(), philo_id, str);
+// 	pthread_mutex_unlock();
+// 	return (0);
+// }
 
 int	eating(t_philo *philo, size_t current_t)
 {
@@ -100,7 +122,6 @@ int	sleeping(t_philo *philo, size_t current_t)
 	printf(COLOR_GREEN "%zu %d SLEEPING\n" COLOR_RESET, current_t
 		- philo->help->start, philo->id);
 	pthread_mutex_unlock(&philo->help->mutex_data);
-	ft_usleep(TIME_TO_SLEEP);
 	return (0);
 }
 
@@ -123,7 +144,7 @@ int	thinking(t_philo *philo, size_t current_t)
 void	died(t_philo *philo, size_t current_t)
 {
 	pthread_mutex_lock(&philo->help->mutex_data);
-	printf(COLOR_GREEN "%zu %d died\n" COLOR_RESET, current_t
+	printf(COLOR_RED "%zu %d died\n" COLOR_RESET, current_t
 		- philo->help->start, philo->id);
 	pthread_mutex_unlock(&philo->help->mutex_data);
 }
@@ -133,8 +154,8 @@ void	*ss(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	if (philo->id % 2 == 0)
-		ft_usleep(60);
+	// if (philo->id % 2 == 0)
+	// 	ft_usleep(60);
 	while (1)
 	{
 		pthread_mutex_lock(&philo->help->mutex_monitor);
@@ -160,6 +181,7 @@ void	*ss(void *arg)
 		{
 			return (NULL);
 		}
+	ft_usleep(TIME_TO_SLEEP);
 		if (thinking(philo, get_current_time()) == 1)
 		{
 			return (NULL);
@@ -198,6 +220,11 @@ void	init_philo(t_help *help)
 		help->philo[i].last_time_eat = get_current_time();
 		help->philo[i].l_fork = &help->forks[i];
 		help->philo[i].r_fork = &help->forks[(i + 1) % NBR_PHILO];
+		if (i == NBR_PHILO - 1)
+		{
+			help->philo[i].r_fork = &help->forks[i];
+			help->philo[i].l_fork = &help->forks[(i + 1) % NBR_PHILO];	
+		}
 		pthread_create(&help->t1[i], NULL, ss, &help->philo[i]);
 		i++;
 	}
@@ -229,6 +256,7 @@ void	l7day(t_help *help)
 			current_time = get_current_time();
 			if (current_time - help->philo[i].last_time_eat > TIME_TO_DIE)
 			{
+				printf("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n");
 				died(&help->philo[i], get_current_time());
 				pthread_mutex_lock(&help->mutex_dead);
 				help->deads = 1;
@@ -239,7 +267,7 @@ void	l7day(t_help *help)
 			pthread_mutex_unlock(&help->mutex_monitor);
 			i++;
 		}
-		ft_usleep(1000);
+		// ft_usleep(1000);
 	}
 }
 
