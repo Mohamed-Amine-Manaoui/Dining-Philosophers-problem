@@ -4,11 +4,29 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <unistd.h>
+//not die
+// #define NBR_PHILO 3
+// #define TIME_TO_DIE 180
+// #define TIME_TO_EAT 60
+// #define TIME_TO_SLEEP 60
+//not die
+// #define NBR_PHILO 4
+// #define TIME_TO_DIE 410
+// #define TIME_TO_EAT 200
+// #define TIME_TO_SLEEP 200
 
+//die with sanitize not work in some time
+// #define NBR_PHILO 4
+// #define TIME_TO_DIE 310
+// #define TIME_TO_EAT 200
+// #define TIME_TO_SLEEP 100
+
+//not die
 #define NBR_PHILO 5
 #define TIME_TO_DIE 800
 #define TIME_TO_EAT 200
 #define TIME_TO_SLEEP 200
+
 #define NBR_OF_x7al_khasso_yakl 10
 
 struct s_help;
@@ -122,6 +140,7 @@ int	sleeping(t_philo *philo, size_t current_t)
 	printf(COLOR_GREEN "%zu %d SLEEPING\n" COLOR_RESET, current_t
 		- philo->help->start, philo->id);
 	pthread_mutex_unlock(&philo->help->mutex_data);
+	ft_usleep(TIME_TO_SLEEP);
 	return (0);
 }
 
@@ -181,11 +200,12 @@ void	*ss(void *arg)
 		{
 			return (NULL);
 		}
-	ft_usleep(TIME_TO_SLEEP);
 		if (thinking(philo, get_current_time()) == 1)
 		{
 			return (NULL);
 		}
+		// new_add
+		ft_usleep((TIME_TO_DIE - (get_current_time() - philo->last_time_eat)) / 2);
 	}
 	return (NULL);
 }
@@ -225,9 +245,11 @@ void	init_philo(t_help *help)
 			help->philo[i].r_fork = &help->forks[i];
 			help->philo[i].l_fork = &help->forks[(i + 1) % NBR_PHILO];	
 		}
-		pthread_create(&help->t1[i], NULL, ss, &help->philo[i]);
 		i++;
 	}
+	i  = -1;
+	while (++i < NBR_PHILO)
+		pthread_create(&help->t1[i], NULL, ss, &help->philo[i]);
 }
 
 void	join_philo(t_help *help)
@@ -256,7 +278,7 @@ void	l7day(t_help *help)
 			current_time = get_current_time();
 			if (current_time - help->philo[i].last_time_eat > TIME_TO_DIE)
 			{
-				printf("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n");
+				// printf("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n");
 				died(&help->philo[i], get_current_time());
 				pthread_mutex_lock(&help->mutex_dead);
 				help->deads = 1;
