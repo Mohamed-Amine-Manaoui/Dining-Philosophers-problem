@@ -4,30 +4,29 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <unistd.h>
-//not die
+// not die
 // #define NBR_PHILO 3
 // #define TIME_TO_DIE 180
 // #define TIME_TO_EAT 60
 // #define TIME_TO_SLEEP 60
-//not die
+// not die
 // #define NBR_PHILO 4
 // #define TIME_TO_DIE 410
 // #define TIME_TO_EAT 200
 // #define TIME_TO_SLEEP 200
 
-//die with sanitize not work in some time
+// die with sanitize not work in some time
 // #define NBR_PHILO 4
 // #define TIME_TO_DIE 310
 // #define TIME_TO_EAT 200
 // #define TIME_TO_SLEEP 100
 
-//not die
+// not die
 #define NBR_PHILO 5
 #define TIME_TO_DIE 800
 #define TIME_TO_EAT 200
-#define TIME_TO_SLEEP 200    
-
-#define NBR_OF_x7al_khasso_yakl 10
+#define TIME_TO_SLEEP 200
+#define NBR_MEALS 1
 
 struct s_help;
 typedef struct s_philo
@@ -36,6 +35,7 @@ typedef struct s_philo
 	pthread_mutex_t	*r_fork;
 	pthread_mutex_t	*l_fork;
 	size_t			last_time_eat;
+	size_t			meals;
 	struct s_help	*help;
 }					t_philo;
 
@@ -49,6 +49,9 @@ typedef struct s_help
 	struct s_philo	*philo;
 	int				deads;
 	size_t			start;
+	size_t  philo_meals;
+	// flag for I have five argv
+	size_t			flag_meals;
 }					t_help;
 
 #define COLOR_RESET "\033[0m"
@@ -98,14 +101,14 @@ void	take_a_fork(t_philo *philo, size_t current_t)
 // 	if (check_death())
 // 	{
 // 		pthread_mutex_unlock();
-// 		return 1;
+// 		return (1);
 // 	}
 // 	pthread_mutex_unlock();
 // 	pthread_mutex_lock();
 // 	printf("%zu %d %s", calculate_time(), philo_id, str);
 // 	pthread_mutex_unlock();
 // 	return (0);
-// }
+// }flag_meals * nbr_philo
 
 int	eating(t_philo *philo, size_t current_t)
 {
@@ -114,6 +117,21 @@ int	eating(t_philo *philo, size_t current_t)
 	{
 		pthread_mutex_unlock(&philo->help->mutex_monitor);
 		return (1);
+	}
+	pthread_mutex_unlock(&philo->help->mutex_monitor);
+	pthread_mutex_lock(&philo->help->mutex_monitor);
+	if (philo->help->deads)
+	{
+		pthread_mutex_unlock(&philo->help->mutex_monitor);
+		return (1);
+	}
+	pthread_mutex_unlock(&philo->help->mutex_monitor);
+	pthread_mutex_lock(&philo->help->mutex_monitor);
+	if (philo->help->flag_meals == 1)
+	{
+		philo->meals--;
+		if (philo->meals == 0)
+			philo->help->philo_meals--;
 	}
 	pthread_mutex_unlock(&philo->help->mutex_monitor);
 	pthread_mutex_lock(&philo->help->mutex_data);
@@ -173,8 +191,6 @@ void	*ss(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	// if (philo->id % 2 == 0)
-	// 	ft_usleep(60);
 	while (1)
 	{
 		pthread_mutex_lock(&philo->help->mutex_monitor);
@@ -204,8 +220,9 @@ void	*ss(void *arg)
 		{
 			return (NULL);
 		}
-		// new_add
-		ft_usleep((TIME_TO_DIE - (get_current_time() - philo->last_time_eat)) / 2);
+		// new_add_by_yassir_
+		ft_usleep((TIME_TO_DIE - (get_current_time() - philo->last_time_eat))
+			/ 2);
 	}
 	return (NULL);
 }
@@ -230,11 +247,14 @@ void	init_philo(t_help *help)
 {
 	int	i;
 
-	i = 0;
 	help->t1 = malloc(NBR_PHILO * sizeof(pthread_t));
 	help->philo = malloc(NBR_PHILO * sizeof(t_philo));
+	i = 0;
+	help->philo_meals = NBR_PHILO;
 	while (i < NBR_PHILO)
 	{
+		if (help->flag_meals)
+			help->philo[i].meals = NBR_MEALS;
 		help->philo[i].id = i + 1;
 		help->philo[i].help = help;
 		help->philo[i].last_time_eat = get_current_time();
@@ -243,11 +263,11 @@ void	init_philo(t_help *help)
 		if (i == NBR_PHILO - 1)
 		{
 			help->philo[i].r_fork = &help->forks[i];
-			help->philo[i].l_fork = &help->forks[(i + 1) % NBR_PHILO];	
+			help->philo[i].l_fork = &help->forks[(i + 1) % NBR_PHILO];
 		}
 		i++;
 	}
-	i  = -1;
+	i = -1;
 	while (++i < NBR_PHILO)
 		pthread_create(&help->t1[i], NULL, ss, &help->philo[i]);
 }
@@ -271,6 +291,19 @@ void	l7day(t_help *help)
 
 	while (1)
 	{
+		if (help->flag_meals == 1)
+		{
+			pthread_mutex_lock(&help->mutex_monitor);
+			if (help->philo_meals == 0)
+			{
+				pthread_mutex_lock(&help->mutex_dead);
+				help->deads = 1;
+				pthread_mutex_unlock(&help->mutex_dead);
+				pthread_mutex_unlock(&help->mutex_monitor);
+				return;	
+			}
+			pthread_mutex_unlock(&help->mutex_monitor);
+		}
 		i = 0;
 		while (i < NBR_PHILO)
 		{
@@ -278,7 +311,6 @@ void	l7day(t_help *help)
 			current_time = get_current_time();
 			if (current_time - help->philo[i].last_time_eat > TIME_TO_DIE)
 			{
-				// printf("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS\n");
 				died(&help->philo[i], get_current_time());
 				pthread_mutex_lock(&help->mutex_dead);
 				help->deads = 1;
@@ -289,7 +321,6 @@ void	l7day(t_help *help)
 			pthread_mutex_unlock(&help->mutex_monitor);
 			i++;
 		}
-		// ft_usleep(1000);
 	}
 }
 
@@ -300,6 +331,9 @@ int	main(void)
 	help = malloc(sizeof(t_help));
 	help->start = get_current_time();
 	help->deads = 0;
+	help->philo_meals = NBR_PHILO;
+	//for now before parsing
+	help->flag_meals = 1;
 	init_mutex(help);
 	init_philo(help);
 	l7day(help);
