@@ -25,7 +25,7 @@
 #define NBR_PHILO 5
 #define TIME_TO_DIE 800
 #define TIME_TO_EAT 200
-#define TIME_TO_SLEEP 200
+#define TIME_TO_SLEEP 200    
 
 #define NBR_OF_x7al_khasso_yakl 10
 
