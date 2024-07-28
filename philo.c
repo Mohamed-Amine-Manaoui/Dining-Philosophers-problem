@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 17:45:10 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/07/28 18:14:17 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/07/28 20:31:37 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,29 +16,8 @@
 #include <stdlib.h>
 #include <sys/time.h>
 #include <unistd.h>
-// not die
-// #define NBR_PHILO 3
-// #define TIME_TO_DIE 180
-// #define TIME_TO_EAT 60
-// #define TIME_TO_SLEEP 60
-// not work !!
-// #define NBR_PHILO 4
-// #define TIME_TO_DIE 410
-// #define TIME_TO_EAT 200
-// #define TIME_TO_SLEEP 200
 
-// die with sanitize not work in some time
-// #define NBR_PHILO 4
-// #define TIME_TO_DIE 310
-// #define TIME_TO_EAT 200
-// #define TIME_TO_SLEEP 100
-
-// not die
-#define NBR_PHILO 5
-#define TIME_TO_DIE 800
-#define TIME_TO_EAT 200
-#define TIME_TO_SLEEP 200
-#define NBR_MEALS 1
+// #define nbr_meals 1
 
 struct s_help;
 typedef struct s_philo
@@ -53,6 +32,11 @@ typedef struct s_philo
 
 typedef struct s_help
 {
+	int				nbr_philo;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				nbr_meals;
 	pthread_t		*t1;
 	pthread_mutex_t	*forks;
 	pthread_mutex_t	mutex_data;
@@ -146,7 +130,7 @@ int	eating(t_philo *philo, size_t current_t)
 	pthread_mutex_lock(&philo->help->mutex_monitor);
 	philo->last_time_eat = get_current_time();
 	pthread_mutex_unlock(&philo->help->mutex_monitor);
-	ft_msleep(TIME_TO_EAT);
+	ft_msleep(philo->help->time_to_eat);
 	return (0);
 }
 
@@ -163,7 +147,7 @@ int	sleeping(t_philo *philo, size_t current_t)
 	printf(COLOR_GREEN "%zu %d SLEEPING\n" COLOR_RESET, current_t
 		- philo->help->start, philo->id);
 	pthread_mutex_unlock(&philo->help->mutex_data);
-	ft_msleep(TIME_TO_SLEEP);
+	ft_msleep(philo->help->time_to_sleep);
 	return (0);
 }
 
@@ -198,16 +182,15 @@ void	dd(t_philo *philo)
 	pthread_mutex_lock(philo->r_fork);
 	take_a_fork(philo, get_current_time());
 }
-void ee(t_philo *philo)
+void	ee(t_philo *philo)
 {
-		pthread_mutex_lock(&philo->help->mutex_monitor);
-		if (philo->help->deads)
-		{
-			pthread_mutex_unlock(&philo->help->mutex_monitor);
-			return ;
-		}
+	pthread_mutex_lock(&philo->help->mutex_monitor);
+	if (philo->help->deads)
+	{
 		pthread_mutex_unlock(&philo->help->mutex_monitor);
-		
+		return ;
+	}
+	pthread_mutex_unlock(&philo->help->mutex_monitor);
 }
 
 void	*ss(void *arg)
@@ -233,8 +216,8 @@ void	*ss(void *arg)
 			return (NULL);
 		if (thinking(philo, get_current_time()) == 1)
 			return (NULL);
-		ft_msleep((TIME_TO_DIE - (get_current_time() - philo->last_time_eat))
-			/ 2);
+		ft_msleep((philo->help->time_to_die - (get_current_time()
+					- philo->last_time_eat)) / 2);
 	}
 	return (NULL);
 }
@@ -244,8 +227,8 @@ void	init_mutex(t_help *help)
 	int	i;
 
 	i = 0;
-	help->forks = malloc(NBR_PHILO * sizeof(pthread_mutex_t));
-	while (i < NBR_PHILO)
+	help->forks = malloc(help->nbr_philo * sizeof(pthread_mutex_t));
+	while (i < help->nbr_philo)
 	{
 		pthread_mutex_init(&help->forks[i], NULL);
 		i++;
@@ -259,28 +242,28 @@ void	init_philo(t_help *help)
 {
 	int	i;
 
-	help->t1 = malloc(NBR_PHILO * sizeof(pthread_t));
-	help->philo = malloc(NBR_PHILO * sizeof(t_philo));
+	help->t1 = malloc(help->nbr_philo * sizeof(pthread_t));
+	help->philo = malloc(help->nbr_philo * sizeof(t_philo));
 	i = 0;
-	help->philo_meals = NBR_PHILO;
-	while (i < NBR_PHILO)
+	help->philo_meals = help->nbr_philo;
+	while (i < help->nbr_philo)
 	{
-		// if (help->flag_meals)
-		// help->philo[i].meals = NBR_MEALS;
+		if (help->flag_meals)
+			help->philo[i].meals = help->nbr_meals;
 		help->philo[i].id = i + 1;
 		help->philo[i].help = help;
 		help->philo[i].last_time_eat = get_current_time();
 		help->philo[i].l_fork = &help->forks[i];
-		help->philo[i].r_fork = &help->forks[(i + 1) % NBR_PHILO];
-		if (i == NBR_PHILO - 1)
+		help->philo[i].r_fork = &help->forks[(i + 1) % help->nbr_philo];
+		if (i == help->nbr_philo - 1)
 		{
 			help->philo[i].r_fork = &help->forks[i];
-			help->philo[i].l_fork = &help->forks[(i + 1) % NBR_PHILO];
+			help->philo[i].l_fork = &help->forks[(i + 1) % help->nbr_philo];
 		}
 		i++;
 	}
 	i = -1;
-	while (++i < NBR_PHILO)
+	while (++i < help->nbr_philo)
 		pthread_create(&help->t1[i], NULL, ss, &help->philo[i]);
 }
 
@@ -289,7 +272,7 @@ void	join_philo(t_help *help)
 	int	i;
 
 	i = 0;
-	while (i < NBR_PHILO)
+	while (i < help->nbr_philo)
 	{
 		pthread_join(help->t1[i], NULL);
 		i++;
@@ -310,6 +293,7 @@ int	__if_max_meals__(t_help *help)
 	pthread_mutex_unlock(&help->mutex_monitor);
 	return (1);
 }
+
 void	l7day(t_help *help)
 {
 	int		i;
@@ -320,11 +304,11 @@ void	l7day(t_help *help)
 		if (help->flag_meals == 1 && __if_max_meals__(help) == 0)
 			return ;
 		i = 0;
-		while (i < NBR_PHILO)
+		while (i < help->nbr_philo)
 		{
 			pthread_mutex_lock(&help->mutex_monitor);
 			current_time = get_current_time();
-			if (current_time - help->philo[i].last_time_eat > TIME_TO_DIE)
+			if (current_time - help->philo[i].last_time_eat > help->time_to_die)
 			{
 				died(&help->philo[i], get_current_time());
 				pthread_mutex_lock(&help->mutex_dead);
@@ -338,23 +322,139 @@ void	l7day(t_help *help)
 		}
 	}
 }
+//////////////////////______PARSING______/////////////////////////
 
-int	main(void)
+int	ft_atoi(const char *str)
+{
+	int		i;
+	int		signe;
+	long	res;
+
+	i = 0;
+	signe = 1;
+	res = 0;
+	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
+		i++;
+	if (str[i] == '+')
+		i++;
+	else if (str[i] == '-')
+	{
+		signe = -1;
+		i++;
+	}
+	while (str[i] >= '0' && str[i] <= '9')
+	{
+		res = res * 10 + (str[i] - '0');
+		if (res * signe > INT_MAX || res * signe < INT_MIN)
+			printf("Error overflow !!\n");
+		i++;
+	}
+	return (res * signe);
+}
+
+int	ft_isdigit(int c)
+{
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
+}
+
+int	check_alpha(char *av)
+{
+	int	i;
+
+	i = 0;
+	if (av[i] == '-' || av[i] == '+')
+		i++;
+	if (!av[i])
+		return (1);
+	while (av[i])
+	{
+		if (ft_isdigit(av[i]))
+			i++;
+		else
+			return (1);
+	}
+	return (0);
+}
+int	handle_error(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (((str[i] == '-' || str[i] == '+') && !(str[i + 1] >= 48 && str[i
+					+ 1] <= 57)) || check_alpha(str))
+		{
+			return (-1);
+		}
+		i++;
+	}
+	return (1); // Success
+}
+
+int	valid_args(char **av, t_help *help)
+{
+	int	i;
+
+	i = 1;
+	while (av[i])
+	{
+		if (handle_error(av[i]) == -1)
+			return (1);
+		i++;
+	}
+	help->nbr_philo = ft_atoi(av[1]);
+	help->time_to_die = ft_atoi(av[2]);
+	help->time_to_eat = ft_atoi(av[3]);
+	help->time_to_sleep = ft_atoi(av[4]);
+	if (av[5])
+		help->nbr_meals = ft_atoi(av[5]);
+	// exit(0);
+	return (0);
+}
+
+int	main(int ac, char **av)
 {
 	t_help	*help;
 
 	help = malloc(sizeof(t_help));
-	help->start = get_current_time();
-	help->deads = 0;
-	help->philo_meals = NBR_PHILO;
-	// for now before parsing
-	help->flag_meals = 1;
-	init_mutex(help);
-	init_philo(help);
-	l7day(help);
-	join_philo(help);
+	if (ac == 5 || ac == 6)
+	{
+		if (valid_args(av, help) == 1)
+			return (printf("INVALID ARGUMENT !!!!\n"), 0);
+		help->start = get_current_time();
+		help->deads = 0;
+		help->philo_meals = help->nbr_philo;
+		// for now before parsing
+		help->flag_meals = 1;
+		init_mutex(help);
+		init_philo(help);
+		l7day(help);
+		join_philo(help);
+	}
+	else
+		printf("number for argument invalid !!!\n");
 	return (0);
 }
+
+// int	main(void)
+// {
+// 	t_help	*help;
+
+// 	help = malloc(sizeof(t_help));
+// 	help->start = get_current_time();
+// 	help->deads = 0;
+// 	help->philo_meals = nbr_philo;
+// 	// for now before parsing
+// 	help->flag_meals = 1;
+// 	init_mutex(help);
+// 	init_philo(help);
+// 	l7day(help);
+// 	join_philo(help);
+// 	return (0);
+// }
 
 // philo ==> thread
 // forks ==> mutex
