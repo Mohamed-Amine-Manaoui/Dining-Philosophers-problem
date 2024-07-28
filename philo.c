@@ -299,7 +299,7 @@ void	l7day(t_help *help)
 				pthread_mutex_lock(&help->mutex_dead);
 				help->deads = 1;
 				pthread_mutex_unlock(&help->mutex_dead);
-				pthread_mutex_unlock(&help->mutex_monitor);
+				pthread_mutex_unlock(&help->mutex_monitor);  
 				return;	
 			}
 			pthread_mutex_unlock(&help->mutex_monitor);
