@@ -6,15 +6,20 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 17:45:10 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/07/29 10:02:46 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/07/29 10:07:38 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-/////////////////////// khassni n9ra 3lihoum bzaaaf
-
-//////////////////////______PARSING______/////////////////////////
+int	valid_nbr(t_help *help)
+{
+	if (help->nbr_philo <= 0 || help->nbr_meals <= 0)
+		return (0);
+	if (help->time_to_die < 0 || help->time_to_eat < 0 || help->time_to_sleep)
+		return (0);
+	return (1);
+}
 
 int	main(int ac, char **av)
 {
@@ -25,6 +30,8 @@ int	main(int ac, char **av)
 	{
 		if (valid_args(av, help) == 1)
 			return (free(help), printf("INVALID ARGUMENT !!!!\n"), 0);
+		if (valid_nbr(help) == 0)
+			return (0);
 		help->start = get_current_time();
 		help->deads = 0;
 		help->philo_meals = help->nbr_philo;
