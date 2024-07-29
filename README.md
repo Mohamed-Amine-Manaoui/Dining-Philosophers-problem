@@ -1,1 +1,1 @@
-# philo
+# philosophers
