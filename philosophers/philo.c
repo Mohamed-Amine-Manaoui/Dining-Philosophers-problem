@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 17:45:10 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/07/28 22:35:26 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/07/29 10:02:46 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	main(int ac, char **av)
 	if (ac == 5 || ac == 6)
 	{
 		if (valid_args(av, help) == 1)
-			return (printf("INVALID ARGUMENT !!!!\n"), 0);
+			return (free(help), printf("INVALID ARGUMENT !!!!\n"), 0);
 		help->start = get_current_time();
 		help->deads = 0;
 		help->philo_meals = help->nbr_philo;
@@ -33,9 +33,13 @@ int	main(int ac, char **av)
 		init_philo(help);
 		__monitor__(help);
 		join_philo(help);
+		free(help->forks);
+		free(help->t1);
+		free(help->philo);
 	}
 	else
 		printf("number for argument invalid !!!\n");
+	free(help);
 	return (0);
 }
 
