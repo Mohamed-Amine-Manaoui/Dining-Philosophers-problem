@@ -9,10 +9,10 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#define NBR_PHILO 4
-#define TIME_TO_DIE 310
-#define TIME_TO_EAT 200
-#define TIME_TO_SLEEP 100
+#define NBR_PHILO 5
+#define TIME_TO_DIE 179
+#define TIME_TO_EAT 60
+#define TIME_TO_SLEEP 60
 
 struct s_help;
 typedef struct s_philo
