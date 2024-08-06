@@ -6,11 +6,21 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 20:33:47 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/06 21:24:55 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/06 21:48:45 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
+
+int	valid_nbr(t_help *help, char **av)
+{
+	if (help->nbr_philo <= 0 || (av[5] && help->nbr_meals <= 0))
+		return (0);
+	if (help->time_to_die < 0 || help->time_to_eat < 0
+		|| help->time_to_sleep < 0)
+		return (0);
+	return (1);
+}
 
 void	go_philo(t_help *help)
 {
@@ -54,17 +64,28 @@ void	kill_pids(t_help *help)
 	}
 }
 
-int	main(void)
+int	main(int ac, char **av)
 {
 	t_help	*help;
 
 	help = malloc(sizeof(t_help));
-	if (init_semaphore(help) == 1)
-		return (free(help), 0);
-	help->philo_meals = NBR_PHILO;
-	help->flag_meals = 0;
-	init_philo(help);
-	go_philo(help);
-	kill_pids(help);
-	sem_post(help->sem_write);
+	if (ac == 5 || ac == 6)
+	{
+		if (valid_args(av, help) == 1)
+			return (free(help), printf("INVALID ARGUMENT !!!!\n"), 0);
+		if (valid_nbr(help, av) == 0)
+			return (free(help), 0);
+		if (init_semaphore(help) == 1)
+			return (free(help), 0);
+		help->philo_meals = help->nbr_meals;
+		help->flag_meals = 0;
+		init_philo(help);
+		go_philo(help);
+		kill_pids(help);
+		sem_post(help->sem_write);
+	}
+	else
+		printf("number for argument invalid !!!\n");
+	free(help);
+	return (0);
 }

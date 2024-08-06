@@ -2,7 +2,7 @@ CC = cc
 
 CFLAGS = -Wall -Werror -Wextra #-g3 -fsanitize=thread
 
-SRCB = inisialization_bonus.c monitor_bonus.c philo_bonus.c routine_bonus.c
+SRCB = inisialization_bonus.c monitor_bonus.c philo_bonus.c routine_bonus.c parsing_bonus.c
 
 OBJB = $(SRCB:.c=.o)
 

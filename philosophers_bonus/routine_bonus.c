@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 20:50:35 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/06 21:08:40 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/06 21:44:19 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	eating(t_philo *philo)
 	sem_wait(philo->help->sem_write);
 	philo->last_time_eat = get_current_time();
 	sem_post(philo->help->sem_write);
-	ft_msleep(TIME_TO_EAT);
+	ft_msleep(philo->help->time_to_eat);
 }
 
 void	sleeping(t_philo *philo)
@@ -43,7 +43,7 @@ void	sleeping(t_philo *philo)
 	printf(COLOR_BLUE "%zu %d is sleeping\n" COLOR_RESET, get_current_time()
 		- philo->help->start, philo->id);
 	sem_post(philo->help->sem_write);
-	ft_msleep(TIME_TO_SLEEP);
+	ft_msleep(philo->help->time_to_sleep);
 }
 
 void	thinking(t_philo *philo)

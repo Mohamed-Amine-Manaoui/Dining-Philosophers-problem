@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 20:37:03 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/06 21:24:32 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/06 21:48:55 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,16 @@
 
 int	init_semaphore(t_help *help)
 {
-	help->philo = malloc(NBR_PHILO * sizeof(t_philo));
+	help->philo = malloc(help->nbr_philo * sizeof(t_philo));
 	if (!help->philo)
 		return (1);
-	help->pids = malloc(NBR_PHILO * sizeof(pid_t));
+	help->pids = malloc(help->nbr_philo * sizeof(pid_t));
 	if (!help->pids)
 		return (1);
 	help->start = get_current_time();
 	sem_unlink("forks");
-	help->sem_forks = sem_open("forks", O_CREAT | O_EXCL, 0644, NBR_PHILO);
+	help->sem_forks = sem_open("forks", O_CREAT | O_EXCL, 0644,
+			help->nbr_philo);
 	sem_unlink("write");
 	help->sem_write = sem_open("write", O_CREAT | O_EXCL, 0644, 1);
 	sem_unlink("eat");
@@ -40,7 +41,7 @@ void	init_philo(t_help *help)
 	int	i;
 
 	i = 0;
-	while (i < NBR_PHILO)
+	while (i < help->nbr_philo)
 	{
 		if (help->flag_meals)
 			help->philo[i].meals = NBR_MEALS;

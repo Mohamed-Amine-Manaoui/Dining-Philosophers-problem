@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 20:47:07 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/06 20:52:23 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/06 21:49:07 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ void	*monitor_die(void *arg)
 	while (1)
 	{
 		sem_wait(philo->help->sem_write);
-		if (get_current_time() - philo->last_time_eat > (size_t)TIME_TO_DIE)
+		if (get_current_time()
+			- philo->last_time_eat > (size_t)philo->help->time_to_die)
 		{
 			printf(COLOR_RED "%zu %d died\n" COLOR_RESET, get_current_time()
 				- philo->help->start, philo->id);

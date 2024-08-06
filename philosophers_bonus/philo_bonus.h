@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 21:25:33 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/06 21:25:58 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/06 21:49:32 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,11 @@ typedef struct s_philo
 
 typedef struct s_help
 {
+	int				nbr_philo;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				nbr_meals;
 	sem_t			*sem_forks;
 	sem_t			*sem_write;
 	sem_t			*sem_monitor;
@@ -78,5 +83,7 @@ size_t				get_current_time(void);
 int					ft_msleep(size_t milliseconds);
 // routine
 void				routine(t_philo *philo);
+// parsing
+int					valid_args(char **av, t_help *help);
 
 #endif
