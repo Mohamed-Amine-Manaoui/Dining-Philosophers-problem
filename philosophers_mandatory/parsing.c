@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 21:45:26 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/07/28 21:50:51 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/08 17:27:50 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,10 @@ int	handle_error(char *str)
 	i = 0;
 	while (str[i])
 	{
+		while (str[i] == 32)
+			i++;
 		if (((str[i] == '-' || str[i] == '+') && !(str[i + 1] >= 48 && str[i
-						+ 1] <= 57)) || check_alpha(str))
+					+ 1] <= 57)) || check_alpha(str))
 		{
 			return (-1);
 		}
@@ -83,11 +85,58 @@ int	handle_error(char *str)
 	return (1);
 }
 
-int	valid_args(char **av, t_help *help)
+char	*ft_substr(char *s, unsigned int start, size_t len)
+{
+	char	*ptr;
+	size_t	i;
+
+	if (len > ft_strlen(s) - start)
+		len = ft_strlen(s) - start;
+	ptr = (char *)malloc((len + 1) * sizeof(char));
+	if (!ptr)
+		return (NULL);
+	i = 0;
+	while (i < len && s[start] != '\0')
+	{
+		ptr[i] = s[start];
+		i++;
+		start++;
+	}
+	ptr[i] = '\0';
+	return (ptr);
+}
+
+void	ss(int ac, char **av)
+{
+	int	i;
+	int	j;
+	int	k;
+
+	i = 1;
+	k = 0;
+	while (av[i])
+	{
+		j = 0;
+		while (av[i][j] == 32 || av[i][j] == 9)
+			j++;
+		if (!av[i][j])
+			break ;
+		k = j + 1;
+		while (av[i][k] && av[i][k] != 32 && av[i][k] != 9)
+			k++;
+		av[i] = ft_substr(av[i], j, k - j);
+		if (ac - 1 == i)
+			break ;
+		i++;
+	}
+}
+
+int	valid_args(char **av, int ac, t_help *help)
 {
 	int	i;
 
 	i = 1;
+	ss(ac, av);
 	while (av[i])
 	{
 		if (handle_error(av[i]) == -1)

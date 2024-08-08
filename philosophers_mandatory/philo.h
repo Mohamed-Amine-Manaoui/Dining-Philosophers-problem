@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 22:00:10 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/07/29 06:25:28 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/08 17:03:58 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-struct	s_help;
+struct s_help;
 typedef struct s_philo
 {
 	int				id;
@@ -56,8 +56,10 @@ typedef struct s_help
 # define COLOR_YELLOW "\033[33m"
 # define COLOR_BLUE "\033[34m"
 
-int					valid_args(char **av, t_help *help);
-
+// parsing
+int					valid_args(char **av, int ac, t_help *help);
+int					ft_isdigit(int c);
+int					ft_strlen(char *str);
 // initializasion
 void				init_mutex(t_help *help);
 void				init_philo(t_help *help);
