@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 22:00:10 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/08 17:03:58 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/08 23:51:37 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-struct s_help;
+struct	s_help;
 typedef struct s_philo
 {
 	int				id;
@@ -56,27 +56,37 @@ typedef struct s_help
 # define COLOR_YELLOW "\033[33m"
 # define COLOR_BLUE "\033[34m"
 
-// parsing
-int					valid_args(char **av, int ac, t_help *help);
+// external fuction
 int					ft_isdigit(int c);
 int					ft_strlen(char *str);
+char				*ft_substr(char *s, unsigned int start, size_t len);
+int					ft_atoi(const char *str);
 // initializasion
 void				init_mutex(t_help *help);
 void				init_philo(t_help *help);
 void				join_philo(t_help *help);
-// routine
-void				*routine(void *arg);
-int					eating(t_philo *philo, size_t current_t);
-int					sleeping(t_philo *philo, size_t current_t);
-int					thinking(t_philo *philo, size_t current_t);
-void				died(t_philo *philo, size_t current_t);
-// routine_norms
-void				take_a_fork(t_philo *philo, size_t current_t);
-void				lock_a_forks(t_philo *philo);
-void				death_routine(t_philo *philo);
 // monitor
 size_t				get_current_time(void);
 int					ft_msleep(size_t milliseconds);
 int					__if_max_meals__(t_help *help);
 void				__monitor__(t_help *help);
+// parsing
+int					check_alpha(char *av);
+int					handle_error(char *str);
+void				handle_whitespaces(int ac, char **av);
+int					valid_args(char **av, int ac, t_help *help);
+int					count_spaces(char *str, char c);
+// main project
+int					valid_nbr(t_help *help, char **av);
+int					valid_data(int ac, char **av);
+// routine_norms
+void				take_a_fork(t_philo *philo, size_t current_t);
+void				lock_a_forks(t_philo *philo);
+void				death_routine(t_philo *philo);
+// routine
+int					eating(t_philo *philo, size_t current_t);
+int					sleeping(t_philo *philo, size_t current_t);
+int					thinking(t_philo *philo, size_t current_t);
+void				died(t_philo *philo, size_t current_t);
+void				*routine(void *arg);
 #endif
