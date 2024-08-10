@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 22:00:10 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/08 23:51:37 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/10 20:43:32 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ typedef struct s_help
 // external fuction
 int					ft_isdigit(int c);
 int					ft_strlen(char *str);
-char				*ft_substr(char *s, unsigned int start, size_t len);
 int					ft_atoi(const char *str);
 // initializasion
 void				init_mutex(t_help *help);
@@ -73,7 +72,7 @@ void				__monitor__(t_help *help);
 // parsing
 int					check_alpha(char *av);
 int					handle_error(char *str);
-void				handle_whitespaces(int ac, char **av);
+// void handle_whitespaces(int ac, char **av);
 int					valid_args(char **av, int ac, t_help *help);
 int					count_spaces(char *str, char c);
 // main project

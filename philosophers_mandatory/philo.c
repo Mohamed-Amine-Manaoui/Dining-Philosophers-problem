@@ -6,9 +6,15 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 17:45:10 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/08 23:39:45 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/10 20:52:28 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+/*
+	problems :
+	->free memory
+	->./philo 2 120 60 "600   ksdlfsdfskdfjds-988"
+*/
 
 #include "philo.h"
 
@@ -40,6 +46,21 @@ int	valid_data(int ac, char **av)
 	return (0);
 }
 
+void	destroy_mutex(t_help *help)
+{
+	int	i;
+
+	pthread_mutex_destroy(&help->mutex_data);
+	pthread_mutex_destroy(&help->mutex_monitor);
+	pthread_mutex_destroy(&help->mutex_dead);
+	i = 0;
+	while (i < help->nbr_philo)
+	{
+		pthread_mutex_destroy(&help->forks[i]);
+		i++;
+	}
+}
+
 int	main(int ac, char **av)
 {
 	t_help	*help;
@@ -61,8 +82,8 @@ int	main(int ac, char **av)
 		init_philo(help);
 		__monitor__(help);
 		join_philo(help);
-		free(help->forks);
-		(free(help->t1), free(help->philo));
+		destroy_mutex(help);
+		(free(help->t1), free(help->philo), free(help->forks));
 	}
 	else
 		printf("number for argument invalid !!!\n");

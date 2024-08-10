@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/08 23:12:51 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/08 23:43:07 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/10 20:43:46 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,27 +27,6 @@ int	ft_strlen(char *str)
 	while (str[i])
 		i++;
 	return (i);
-}
-
-char	*ft_substr(char *s, unsigned int start, size_t len)
-{
-	char	*ptr;
-	size_t	i;
-
-	if (len > ft_strlen(s) - start)
-		len = ft_strlen(s) - start;
-	ptr = (char *)malloc((len + 1) * sizeof(char));
-	if (!ptr)
-		return (NULL);
-	i = 0;
-	while (i < len && s[start] != '\0')
-	{
-		ptr[i] = s[start];
-		i++;
-		start++;
-	}
-	ptr[i] = '\0';
-	return (ptr);
 }
 
 int	ft_atoi(const char *str)

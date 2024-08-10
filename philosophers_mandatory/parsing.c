@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 21:45:26 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/08 23:53:09 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/10 20:48:42 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,27 +50,22 @@ int	handle_error(char *str)
 	return (1);
 }
 
-void	handle_whitespaces(int ac, char **av)
+void	handle_whitespaces(char **av)
 {
 	int	i;
 	int	j;
-	int	k;
 
 	i = 1;
-	k = 0;
 	while (av[i])
 	{
 		j = 0;
 		while (av[i][j] == 32 || av[i][j] == 9)
 			j++;
-		if (!av[i][j])
-			break ;
-		k = j + 1;
-		while (av[i][k] && av[i][k] != 32 && av[i][k] != 9)
-			k++;
-		av[i] = ft_substr(av[i], j, k - j);
-		if (ac - 1 == i)
-			break ;
+		av[i] = av[i] + j;
+		j = ft_strlen(av[i]) - 1;
+		while (av[i][j] == 32 || av[i][j] == 9)
+			j--;
+		av[i][j + 1] = '\0';
 		i++;
 	}
 }
@@ -79,12 +74,15 @@ int	valid_args(char **av, int ac, t_help *help)
 {
 	int	i;
 
+	i = ac;
 	i = 1;
-	handle_whitespaces(ac, av);
+	handle_whitespaces(av);
 	while (av[i])
 	{
 		if (handle_error(av[i]) == -1)
+		{
 			return (1);
+		}
 		i++;
 	}
 	help->nbr_philo = ft_atoi(av[1]);
