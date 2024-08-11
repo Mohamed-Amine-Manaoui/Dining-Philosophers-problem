@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 22:00:10 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/10 20:43:32 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/11 07:05:13 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,13 +71,14 @@ int					__if_max_meals__(t_help *help);
 void				__monitor__(t_help *help);
 // parsing
 int					check_alpha(char *av);
-int					handle_error(char *str);
-// void handle_whitespaces(int ac, char **av);
-int					valid_args(char **av, int ac, t_help *help);
 int					count_spaces(char *str, char c);
+int					handle_error(char *str);
+void				handle_whitespaces(char **av);
+int					valid_args(char **av, int ac, t_help *help);
 // main project
 int					valid_nbr(t_help *help, char **av);
 int					valid_data(int ac, char **av);
+void				destroy_mutex(t_help *help);
 // routine_norms
 void				take_a_fork(t_philo *philo, size_t current_t);
 void				lock_a_forks(t_philo *philo);

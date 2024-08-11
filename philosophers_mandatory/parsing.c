@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 21:45:26 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/10 20:48:42 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/11 07:04:44 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,22 @@ int	check_alpha(char *av)
 			return (1);
 	}
 	return (0);
+}
+
+int	count_spaces(char *str, char c)
+{
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (str[i])
+	{
+		if (str[i] == c)
+			count++;
+		i++;
+	}
+	return (count);
 }
 
 int	handle_error(char *str)
@@ -92,20 +108,4 @@ int	valid_args(char **av, int ac, t_help *help)
 	if (av[5])
 		help->nbr_meals = ft_atoi(av[5]);
 	return (0);
-}
-
-int	count_spaces(char *str, char c)
-{
-	int	i;
-	int	count;
-
-	i = 0;
-	count = 0;
-	while (str[i])
-	{
-		if (str[i] == c)
-			count++;
-		i++;
-	}
-	return (count);
 }

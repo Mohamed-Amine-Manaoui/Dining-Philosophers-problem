@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 21:25:33 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/06 21:49:32 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/11 07:25:26 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,16 +74,33 @@ typedef struct s_help
 # define COLOR_YELLOW "\033[33m"
 # define COLOR_BLUE "\033[34m"
 
-// inisialization
+// external function
+int					ft_strlen(char *str);
+int					ft_isdigit(int c);
+int					ft_atoi(const char *str);
+int					count_spaces(char *str, char c);
+int					valid_data(int ac, char **av);
+// inisialization bonus
 int					init_semaphore(t_help *help);
 void				init_philo(t_help *help);
-// monitor
-void				*monitor_die(void *arg);
+// monitor bonus
 size_t				get_current_time(void);
 int					ft_msleep(size_t milliseconds);
-// routine
-void				routine(t_philo *philo);
-// parsing
+void				*monitor_die(void *arg);
+// parsing bonus
+int					check_alpha(char *av);
+int					handle_error(char *str);
+void				handle_whitespaces(char **av);
 int					valid_args(char **av, t_help *help);
+// main project bonus
+int					valid_nbr(t_help *help, char **av);
+void				kill_pids(t_help *help);
+void				go_philo(t_help *help);
+// routine bonus
+void				take_a_fork(t_philo *philo);
+void				eating(t_philo *philo);
+void				sleeping(t_philo *philo);
+void				thinking(t_philo *philo);
+void				routine(t_philo *philo);
 
 #endif

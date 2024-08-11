@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 20:33:47 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/06 21:48:45 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/11 07:11:37 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,25 +20,6 @@ int	valid_nbr(t_help *help, char **av)
 		|| help->time_to_sleep < 0)
 		return (0);
 	return (1);
-}
-
-void	go_philo(t_help *help)
-{
-	int	i;
-
-	i = 0;
-	while (i < NBR_PHILO)
-	{
-		help->philo[i].last_time_eat = get_current_time();
-		help->pids[i] = fork();
-		if (help->pids[i] == 0)
-		{
-			pthread_create(&help->philo[i].t1, NULL, monitor_die,
-				&help->philo[i]);
-			routine(&help->philo[i]);
-		}
-		i++;
-	}
 }
 
 void	kill_pids(t_help *help)
@@ -64,6 +45,25 @@ void	kill_pids(t_help *help)
 	}
 }
 
+void	go_philo(t_help *help)
+{
+	int	i;
+
+	i = 0;
+	while (i < NBR_PHILO)
+	{
+		help->philo[i].last_time_eat = get_current_time();
+		help->pids[i] = fork();
+		if (help->pids[i] == 0)
+		{
+			pthread_create(&help->philo[i].t1, NULL, monitor_die,
+				&help->philo[i]);
+			routine(&help->philo[i]);
+		}
+		i++;
+	}
+}
+
 int	main(int ac, char **av)
 {
 	t_help	*help;
@@ -71,6 +71,8 @@ int	main(int ac, char **av)
 	help = malloc(sizeof(t_help));
 	if (ac == 5 || ac == 6)
 	{
+		if (valid_data(ac, av) == 1)
+			return (free(help), printf("INVALID DATA !!!!\n"), 0);
 		if (valid_args(av, help) == 1)
 			return (free(help), printf("INVALID ARGUMENT !!!!\n"), 0);
 		if (valid_nbr(help, av) == 0)
@@ -86,6 +88,5 @@ int	main(int ac, char **av)
 	}
 	else
 		printf("number for argument invalid !!!\n");
-	free(help);
-	return (0);
+	return (free(help), 0);
 }

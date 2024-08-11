@@ -6,46 +6,11 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 21:30:23 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/06 21:46:37 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/11 07:14:14 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
-
-int	ft_atoi(const char *str)
-{
-	int		i;
-	int		signe;
-	long	res;
-
-	i = 0;
-	signe = 1;
-	res = 0;
-	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
-		i++;
-	if (str[i] == '+')
-		i++;
-	else if (str[i] == '-')
-	{
-		signe = -1;
-		i++;
-	}
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		res = res * 10 + (str[i] - '0');
-		if (res * signe > INT_MAX || res * signe < INT_MIN)
-			return (0);
-		i++;
-	}
-	return (res * signe);
-}
-
-int	ft_isdigit(int c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
-}
 
 int	check_alpha(char *av)
 {
@@ -83,11 +48,32 @@ int	handle_error(char *str)
 	return (1);
 }
 
+void	handle_whitespaces(char **av)
+{
+	int	i;
+	int	j;
+
+	i = 1;
+	while (av[i])
+	{
+		j = 0;
+		while (av[i][j] == 32 || av[i][j] == 9)
+			j++;
+		av[i] = av[i] + j;
+		j = ft_strlen(av[i]) - 1;
+		while (av[i][j] == 32 || av[i][j] == 9)
+			j--;
+		av[i][j + 1] = '\0';
+		i++;
+	}
+}
+
 int	valid_args(char **av, t_help *help)
 {
 	int	i;
 
 	i = 1;
+	handle_whitespaces(av);
 	while (av[i])
 	{
 		if (handle_error(av[i]) == -1)
