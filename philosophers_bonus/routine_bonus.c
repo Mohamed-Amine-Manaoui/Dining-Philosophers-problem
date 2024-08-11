@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 20:50:35 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/06 21:44:19 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/11 09:11:33 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,9 @@ void	routine(t_philo *philo)
 		{
 			philo->meals--;
 			if (philo->meals == 0)
+			{
 				exit(0);
+			}
 		}
 		sleeping(philo);
 		thinking(philo);

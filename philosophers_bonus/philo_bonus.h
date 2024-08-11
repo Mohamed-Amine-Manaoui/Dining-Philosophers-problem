@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 21:25:33 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/11 07:25:26 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/11 09:35:08 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,22 +23,6 @@
 # include <sys/time.h>
 # include <sys/wait.h>
 # include <unistd.h>
-
-// #define NBR_PHILO 5
-// #define TIME_TO_DIE 180
-// #define TIME_TO_EAT 60
-// #define TIME_TO_SLEEP 60
-
-// #define NBR_PHILO 4
-// #define TIME_TO_DIE 310
-// #define TIME_TO_EAT 200
-// #define TIME_TO_SLEEP 100
-
-# define NBR_PHILO 3
-# define TIME_TO_DIE 180
-# define TIME_TO_EAT 60
-# define TIME_TO_SLEEP 60
-# define NBR_MEALS 1
 
 struct	s_help;
 typedef struct s_philo

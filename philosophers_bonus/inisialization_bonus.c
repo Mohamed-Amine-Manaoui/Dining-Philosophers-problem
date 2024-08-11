@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 20:37:03 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/06 21:48:55 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/11 07:29:10 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	init_philo(t_help *help)
 	while (i < help->nbr_philo)
 	{
 		if (help->flag_meals)
-			help->philo[i].meals = NBR_MEALS;
+			help->philo[i].meals = help->nbr_meals;
 		help->philo[i].id = i + 1;
 		help->philo[i].help = help;
 		i++;
