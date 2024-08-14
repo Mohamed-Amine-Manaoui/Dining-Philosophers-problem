@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 20:50:35 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/11 09:11:33 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/14 17:11:38 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,8 @@ void	routine(t_philo *philo)
 		usleep(50);
 	while (1)
 	{
+		if (is_one_philo(philo) == 1)
+			exit(0);
 		sem_wait(philo->help->sem_forks);
 		take_a_fork(philo);
 		eating(philo);

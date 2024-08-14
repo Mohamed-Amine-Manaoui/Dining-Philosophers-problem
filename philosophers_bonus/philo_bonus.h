@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 21:25:33 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/11 09:35:08 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/14 17:13:36 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int					valid_data(int ac, char **av);
 // inisialization bonus
 int					init_semaphore(t_help *help);
 void				init_philo(t_help *help);
+int					is_one_philo(t_philo *philo);
 // monitor bonus
 size_t				get_current_time(void);
 int					ft_msleep(size_t milliseconds);

@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 20:37:03 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/14 10:04:47 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/14 17:12:11 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ int	init_semaphore(t_help *help)
 		return (1);
 	help->start = get_current_time();
 	sem_unlink("forks");
-	help->sem_forks = sem_open("forks", O_CREAT | O_EXCL, 0644, help->nbr_philo);
+	help->sem_forks = sem_open("forks", O_CREAT | O_EXCL, 0644,
+			help->nbr_philo);
 	sem_unlink("write");
 	help->sem_write = sem_open("write", O_CREAT | O_EXCL, 0644, 1);
 	sem_unlink("eat");
@@ -48,4 +49,22 @@ void	init_philo(t_help *help)
 		help->philo[i].help = help;
 		i++;
 	}
+}
+
+int	is_one_philo(t_philo *philo)
+{
+	if (philo->help->nbr_philo == 1)
+	{
+		sem_wait(philo->help->sem_write);
+		printf(COLOR_YELLOW "%zu %d take a fork !!\n" COLOR_RESET,
+			get_current_time() - philo->help->start, philo->help->philo->id);
+		sem_post(philo->help->sem_write);
+		ft_msleep(philo->help->time_to_die);
+		sem_wait(philo->help->sem_write);
+		printf(COLOR_RED "%zu %d died\n" COLOR_RESET, get_current_time()
+			- philo->help->start + 1, philo->id);
+		sem_post(philo->help->sem_write);
+		return (1);
+	}
+	return (0);
 }
