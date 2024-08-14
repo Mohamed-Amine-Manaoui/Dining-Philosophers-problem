@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 20:37:03 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/11 07:29:10 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/14 10:04:47 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,7 @@ int	init_semaphore(t_help *help)
 		return (1);
 	help->start = get_current_time();
 	sem_unlink("forks");
-	help->sem_forks = sem_open("forks", O_CREAT | O_EXCL, 0644,
-			help->nbr_philo);
+	help->sem_forks = sem_open("forks", O_CREAT | O_EXCL, 0644, help->nbr_philo);
 	sem_unlink("write");
 	help->sem_write = sem_open("write", O_CREAT | O_EXCL, 0644, 1);
 	sem_unlink("eat");

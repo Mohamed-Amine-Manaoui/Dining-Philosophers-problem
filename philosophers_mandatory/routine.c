@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 22:17:23 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/06 16:45:38 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/14 16:37:35 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,13 +90,13 @@ void	*routine(void *arg)
 		usleep(60);
 	while (1)
 	{
-		death_routine(philo);
-		lock_a_forks(philo);
+		if (is_one_philo(philo) == 1)
+			return (NULL);
+		(death_routine(philo), lock_a_forks(philo));
 		if (eating(philo, get_current_time()) == 1)
 		{
 			pthread_mutex_unlock(philo->r_fork);
-			pthread_mutex_unlock(philo->l_fork);
-			return (NULL);
+			return (pthread_mutex_unlock(philo->l_fork), NULL);
 		}
 		pthread_mutex_unlock(philo->r_fork);
 		pthread_mutex_unlock(philo->l_fork);

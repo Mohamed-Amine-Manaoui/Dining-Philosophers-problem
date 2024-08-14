@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 22:16:45 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/07/29 06:25:16 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/14 16:33:04 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,4 +44,18 @@ void	death_routine(t_philo *philo)
 		return ;
 	}
 	pthread_mutex_unlock(&philo->help->mutex_monitor);
+}
+
+int	is_one_philo(t_philo *philo)
+{
+	if (philo->help->nbr_philo == 1)
+	{
+		pthread_mutex_lock(&philo->help->mutex_data);
+		printf(COLOR_YELLOW "%zu %d take a fork !!\n" COLOR_RESET,
+			get_current_time() - philo->help->start, philo->help->philo->id);
+		pthread_mutex_unlock(&philo->help->mutex_data);
+		ft_msleep(philo->help->time_to_die);
+		return (1);
+	}
+	return (0);
 }

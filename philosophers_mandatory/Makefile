@@ -1,6 +1,6 @@
 CC = cc
 
-CFLAGS = -Wall -Werror -Wextra -g3 #-fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -g3 #-fsanitize=thread
 
 SRC = ${shell find .  -type f -name "*.c"}
 

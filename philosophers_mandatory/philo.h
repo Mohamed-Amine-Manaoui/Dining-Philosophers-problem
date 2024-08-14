@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/28 22:00:10 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/11 07:05:13 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/14 16:34:15 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ void				destroy_mutex(t_help *help);
 void				take_a_fork(t_philo *philo, size_t current_t);
 void				lock_a_forks(t_philo *philo);
 void				death_routine(t_philo *philo);
+int					is_one_philo(t_philo *philo);
+
 // routine
 int					eating(t_philo *philo, size_t current_t);
 int					sleeping(t_philo *philo, size_t current_t);
