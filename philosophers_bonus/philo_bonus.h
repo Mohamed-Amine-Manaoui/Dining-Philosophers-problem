@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 21:25:33 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/14 17:13:36 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/18 17:11:05 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-struct	s_help;
+struct s_help;
 typedef struct s_philo
 {
 	int				id;
@@ -36,6 +36,7 @@ typedef struct s_philo
 
 typedef struct s_help
 {
+	int				a;
 	int				nbr_philo;
 	int				time_to_die;
 	int				time_to_eat;
@@ -45,6 +46,7 @@ typedef struct s_help
 	sem_t			*sem_write;
 	sem_t			*sem_monitor;
 	sem_t			*sem_eat;
+	sem_t			*sem_dead;
 	size_t			start;
 	size_t			flag_meals;
 	int				philo_meals;
@@ -80,6 +82,7 @@ int					valid_args(char **av, t_help *help);
 // main project bonus
 int					valid_nbr(t_help *help, char **av);
 void				kill_pids(t_help *help);
+void				cleanup_semaphore(t_help *help);
 void				go_philo(t_help *help);
 // routine bonus
 void				take_a_fork(t_philo *philo);

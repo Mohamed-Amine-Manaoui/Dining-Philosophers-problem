@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 20:50:35 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/14 17:11:38 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/18 15:02:01 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,4 +79,5 @@ void	routine(t_philo *philo)
 		sleeping(philo);
 		thinking(philo);
 	}
+	printf("exit routine\n");
 }

@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 20:37:03 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/14 17:12:11 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/18 12:15:17 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,15 @@ int	init_semaphore(t_help *help)
 			help->nbr_philo);
 	sem_unlink("write");
 	help->sem_write = sem_open("write", O_CREAT | O_EXCL, 0644, 1);
+	sem_unlink("dead");
+	help->sem_dead = sem_open("dead", O_CREAT | O_EXCL, 0644, 0);
 	sem_unlink("eat");
 	help->sem_eat = sem_open("eat", O_CREAT | O_EXCL, 0644, 1);
 	sem_unlink("monitor");
 	help->sem_monitor = sem_open("monitor", O_CREAT | O_EXCL, 0644, 1);
 	if (help->sem_forks == SEM_FAILED || help->sem_write == SEM_FAILED
-		|| help->sem_eat == SEM_FAILED || help->sem_monitor == SEM_FAILED)
+		|| help->sem_eat == SEM_FAILED || help->sem_monitor == SEM_FAILED
+		|| help->sem_dead == SEM_FAILED)
 		return (1);
 	return (0);
 }
@@ -62,7 +65,7 @@ int	is_one_philo(t_philo *philo)
 		ft_msleep(philo->help->time_to_die);
 		sem_wait(philo->help->sem_write);
 		printf(COLOR_RED "%zu %d died\n" COLOR_RESET, get_current_time()
-			- philo->help->start + 1, philo->id);
+			- philo->help->start, philo->id);
 		sem_post(philo->help->sem_write);
 		return (1);
 	}

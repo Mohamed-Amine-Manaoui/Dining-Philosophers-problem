@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 20:33:47 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/11 09:42:48 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/18 17:08:29 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,24 +25,29 @@ int	valid_nbr(t_help *help, char **av)
 void	kill_pids(t_help *help)
 {
 	int	i;
-	int	status;
 
+	sem_wait(help->sem_dead);
 	i = 0;
-	status = 0;
 	while (i < help->nbr_philo)
 	{
-		waitpid(-1, &status, 0);
-		if (status != 0)
-		{
-			i = 0;
-			while (i < help->nbr_philo)
-			{
-				kill(help->pids[i], 15);
-				i++;
-			}
-		}
+		if (help->pids[i])
+			kill(help->pids[i], 9);
 		i++;
 	}
+}
+
+void	cleanup_semaphore(t_help *help)
+{
+	free(help->philo);
+	free(help->pids);
+	sem_close(help->sem_forks);
+	sem_close(help->sem_write);
+	sem_close(help->sem_eat);
+	sem_close(help->sem_monitor);
+	sem_unlink("forks");
+	sem_unlink("write");
+	sem_unlink("eat");
+	sem_unlink("monitor");
 }
 
 void	go_philo(t_help *help)
@@ -52,6 +57,14 @@ void	go_philo(t_help *help)
 	i = 0;
 	while (i < help->nbr_philo)
 	{
+		if (is_one_philo(help->philo) == 1)
+		{
+			ft_msleep(help->time_to_die);
+			cleanup_semaphore(help);
+			sem_unlink("dead");
+			sem_close(help->sem_dead);
+			(free(help), exit(0));
+		}
 		help->philo[i].last_time_eat = get_current_time();
 		help->pids[i] = fork();
 		if (help->pids[i] == 0)
@@ -59,21 +72,11 @@ void	go_philo(t_help *help)
 			pthread_create(&help->philo[i].t1, NULL, monitor_die,
 				&help->philo[i]);
 			routine(&help->philo[i]);
+			pthread_join(help->philo[i].t1, NULL);
+			exit(0);
 		}
 		i++;
 	}
-}
-
-void	unlink_semaphore(t_help *help)
-{
-	free(help->philo);
-	free(help->pids);
-	sem_close(help->sem_forks);
-	unlink("forks");
-	sem_close(help->sem_eat);
-	unlink("eat");
-	sem_close(help->sem_monitor);
-	unlink("monitor");
 }
 
 int	main(int ac, char **av)
@@ -94,13 +97,13 @@ int	main(int ac, char **av)
 		help->philo_meals = help->nbr_meals;
 		help->flag_meals = 0;
 		init_philo(help);
-		(go_philo(help), kill_pids(help));
-		unlink_semaphore(help);
-		sem_post(help->sem_write);
-		sem_close(help->sem_write);
-		unlink("write");
+		(go_philo(help));
+		kill_pids(help);
+		cleanup_semaphore(help);
 	}
 	else
 		printf("number for argument invalid !!!\n");
+	sem_unlink("dead");
+	sem_close(help->sem_dead);
 	return (free(help), 0);
 }
