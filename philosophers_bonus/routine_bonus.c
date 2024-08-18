@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 20:50:35 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/18 15:02:01 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/18 19:34:13 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,16 +68,18 @@ void	routine(t_philo *philo)
 		eating(philo);
 		sem_post(philo->help->sem_forks);
 		sem_post(philo->help->sem_forks);
+		sem_wait(philo->help->sem_monitor);
 		if (philo->help->flag_meals == 1)
 		{
 			philo->meals--;
 			if (philo->meals == 0)
 			{
-				exit(0);
+				philo->help->finish_meals = 1;
+				sem_post(philo->help->sem_monitor);
+				break ;
 			}
 		}
-		sleeping(philo);
-		thinking(philo);
+		sem_post(philo->help->sem_monitor);
+		(sleeping(philo), thinking(philo));
 	}
-	printf("exit routine\n");
 }

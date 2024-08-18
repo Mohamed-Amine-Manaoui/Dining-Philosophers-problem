@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 20:33:47 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/18 17:08:29 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/18 19:29:22 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,10 +95,10 @@ int	main(int ac, char **av)
 		if (init_semaphore(help) == 1)
 			return (free(help), 0);
 		help->philo_meals = help->nbr_meals;
-		help->flag_meals = 0;
+		help->flag_meals = 1;
+		help->finish_meals = 0;
 		init_philo(help);
-		(go_philo(help));
-		kill_pids(help);
+		(go_philo(help), kill_pids(help));
 		cleanup_semaphore(help);
 	}
 	else

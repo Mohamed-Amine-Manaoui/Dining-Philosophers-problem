@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 20:47:07 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/18 16:45:49 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/18 19:30:04 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,16 @@ void	*monitor_die(void *arg)
 		if (get_current_time()
 			- philo->last_time_eat > (size_t)philo->help->time_to_die)
 		{
+			sem_wait(philo->help->sem_monitor);
+			if (philo->help->finish_meals)
+			{
+				sem_post(philo->help->sem_monitor);
+				sem_post(philo->help->sem_dead);
+				break ;
+			}
 			printf("%zu %d died\n", get_current_time() - philo->help->start,
 				philo->id);
+			sem_post(philo->help->sem_monitor);
 			sem_post(philo->help->sem_dead);
 			break ;
 		}

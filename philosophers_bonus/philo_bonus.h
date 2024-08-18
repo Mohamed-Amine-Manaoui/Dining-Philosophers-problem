@@ -6,7 +6,7 @@
 /*   By: mmanaoui <mmanaoui@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/06 21:25:33 by mmanaoui          #+#    #+#             */
-/*   Updated: 2024/08/18 17:11:05 by mmanaoui         ###   ########.fr       */
+/*   Updated: 2024/08/18 19:31:27 by mmanaoui         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-struct s_help;
+struct	s_help;
 typedef struct s_philo
 {
 	int				id;
@@ -36,7 +36,7 @@ typedef struct s_philo
 
 typedef struct s_help
 {
-	int				a;
+	int				finish_meals;
 	int				nbr_philo;
 	int				time_to_die;
 	int				time_to_eat;
