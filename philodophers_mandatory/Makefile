@@ -1,9 +1,9 @@
 CC = cc
 
-CFLAGS = -Wall -Werror -Wextra -pthread -g3 -fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -pthread #-g3 -fsanitize=thread
 
 
-SRC = ${shell find .  -type f -name "*.c"}
+SRC = external_function.c initialization.c monitor.c parsing.c philo.c routine_norms.c routine.c
 
 OBJ = $(SRC:.c=.o)
 
